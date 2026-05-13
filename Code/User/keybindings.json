@@ -1,0 +1,349 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    {
+        "key": "ctrl+s",
+        "command": "-workbench.action.files.save"
+    },
+    {
+        "key": "ctrl+s",
+        "command": "workbench.action.files.save",
+        "when": "notebookEditorFocused && !inputFocus"
+    },
+    {
+        "key": "s",
+        "command": "-workbench.action.files.save",
+        "when": "notebookEditorFocused && !inputFocus"
+    },
+    {
+        "key": "ctrl+alt+n",
+        "command": "python.execInTerminal-icon"
+    },
+    {
+        "key": "ctrl+alt+down",
+        "command": "editor.action.duplicateSelection"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+k",
+        "command": "-editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+'",
+        "command": "-agentforce.addToChat",
+        "when": "editorHasSelection && salesforcedx-einstein-gpt.isEnabled"
+    },
+    {
+        "key": "ctrl+'",
+        "command": "-agentforce.focusChatInput",
+        "when": "salesforcedx-einstein-gpt.isEnabled && !editorHasSelection"
+    },
+    {
+        "key": "ctrl+'",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+shift+[BracketLeft]",
+        "command": "-workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+shift+-",
+        "command": "-workbench.action.navigateForward",
+        "when": "canNavigateForward"
+    },
+    {
+        "key": "ctrl+shift+-",
+        "command": "workbench.action.zoomOut"
+    },
+    {
+        "key": "ctrl+-",
+        "command": "-workbench.action.zoomOut"
+    },
+    {
+        "key": "alt+r",
+        "command": "-gl.refactorCode",
+        "when": "config.gitlab.duoChat.enabled && editorHasSelection && gitlab:chatAvailable && gitlab:chatAvailableForProject && gitlab:isRemoteEnvironment || config.gitlab.duoChat.enabled && editorHasSelection && gitlab:chatAvailable && gitlab:chatAvailableForProject && !gitlab.featureFlags.languageServerWebviews"
+    },
+    {
+        "key": "alt+r",
+        "command": "-gl.webview.refactorCode",
+        "when": "config.gitlab.duoChat.enabled && editorHasSelection && gitlab.featureFlags.languageServerWebviews && gitlab:chatAvailable && gitlab:chatAvailableForProject && !gitlab:isRemoteEnvironment"
+    },
+    {
+        "key": "alt+r",
+        "command": "-toggleSearchEditorRegex",
+        "when": "inSearchEditor && searchInputBoxFocus"
+    },
+    {
+        "key": "alt+r",
+        "command": "-workbench.action.terminal.toggleFindRegex",
+        "when": "terminalFindVisible && terminalHasBeenCreated || terminalFindVisible && terminalProcessSupported"
+    },
+    {
+        "key": "alt+r",
+        "command": "-toggleFindRegex",
+        "when": "editorFocus"
+    },
+    {
+        "key": "alt+r",
+        "command": "-toggleSearchRegex",
+        "when": "searchViewletFocus"
+    },
+    {
+        "key": "alt+r",
+        "command": "sf.retrieve.current.source.file"
+    },
+    {
+        "key": "alt+f",
+        "command": "sf.diff"
+    },
+    {
+        "key": "alt+d",
+        "command": "-gl.closeChat",
+        "when": "config.gitlab.duoChat.enabled && gitlab:chatAvailable && gitlab:chatAvailableForProject && gitlab:chatFocused && gitlab:isRemoteEnvironment && activeViewlet == 'workbench.view.extension.gitlab-duo' || config.gitlab.duoChat.enabled && gitlab:chatAvailable && gitlab:chatAvailableForProject && gitlab:chatFocused && !gitlab.featureFlags.languageServerWebviews && activeViewlet == 'workbench.view.extension.gitlab-duo'"
+    },
+    {
+        "key": "alt+d",
+        "command": "-gl.webview.closeChat",
+        "when": "config.gitlab.duoChat.enabled && gitlab.featureFlags.languageServerWebviews && gitlab:chatAvailable && gitlab:chatAvailableForProject && gitlab:chatFocused && !gitlab:isRemoteEnvironment && activeViewlet == 'workbench.view.extension.gitlab-duo'"
+    },
+    {
+        "key": "alt+d",
+        "command": "-gl.openChat",
+        "when": "config.gitlab.duoChat.enabled && gitlab:chatAvailable && gitlab:chatAvailableForProject && gitlab:isRemoteEnvironment && activeViewlet != 'workbench.view.extension.gitlab-duo' || config.gitlab.duoChat.enabled && gitlab:chatAvailable && gitlab:chatAvailableForProject && !gitlab.featureFlags.languageServerWebviews && activeViewlet != 'workbench.view.extension.gitlab-duo'"
+    },
+    {
+        "key": "alt+d",
+        "command": "-gl.webview.duoChatV2.show",
+        "when": "config.gitlab.duoChat.enabled && gitlab.featureFlags.languageServerWebviews && gitlab:chatAvailable && gitlab:chatAvailableForProject && !gitlab:isRemoteEnvironment && activeViewlet != 'workbench.view.extension.gitlab-duo'"
+    },
+    {
+        "key": "alt+d",
+        "command": "-gl.focusChat",
+        "when": "config.gitlab.duoChat.enabled && gitlab:chatAvailable && gitlab:chatAvailableForProject && gitlab:isRemoteEnvironment && !gitlab:chatFocused && activeViewlet == 'workbench.view.extension.gitlab-duo' || config.gitlab.duoChat.enabled && gitlab:chatAvailable && gitlab:chatAvailableForProject && !gitlab.featureFlags.languageServerWebviews && !gitlab:chatFocused && activeViewlet == 'workbench.view.extension.gitlab-duo'"
+    },
+    {
+        "key": "alt+d",
+        "command": "-gl.webview.focusChat",
+        "when": "config.gitlab.duoChat.enabled && gitlab.featureFlags.languageServerWebviews && gitlab:chatAvailable && gitlab:chatAvailableForProject && !gitlab:chatFocused && !gitlab:isRemoteEnvironment && activeViewlet == 'workbench.view.extension.gitlab-duo'"
+    },
+    {
+        "key": "alt+d",
+        "command": "sf.deploy.current.source.file"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-workbench.action.chat.startVoiceChat",
+        "when": "chatIsEnabled && hasSpeechProvider && inChatInput && !editorFocus && !notebookEditorFocused && !scopedVoiceChatGettingReady && !speechToTextInProgress || chatIsEnabled && hasSpeechProvider && inlineChatFocused && !editorFocus && !notebookEditorFocused && !scopedVoiceChatGettingReady && !speechToTextInProgress"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-workbench.action.chat.stopListeningAndSubmit",
+        "when": "inChatInput && voiceChatInProgress && scopedVoiceChatInProgress == 'editor' || inChatInput && voiceChatInProgress && scopedVoiceChatInProgress == 'inline' || inChatInput && voiceChatInProgress && scopedVoiceChatInProgress == 'quick' || inChatInput && voiceChatInProgress && scopedVoiceChatInProgress == 'view' || inlineChatFocused && voiceChatInProgress && scopedVoiceChatInProgress == 'editor' || inlineChatFocused && voiceChatInProgress && scopedVoiceChatInProgress == 'inline' || inlineChatFocused && voiceChatInProgress && scopedVoiceChatInProgress == 'quick' || inlineChatFocused && voiceChatInProgress && scopedVoiceChatInProgress == 'view'"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-settings.action.toggleAiSearch",
+        "when": "aiSettingResultsAvailable && inSettingsEditor"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-search.action.searchWithAI",
+        "when": "hasAIResultProviderKey && searchViewletFocus"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-workbench.action.terminal.chat.start",
+        "when": "chatIsEnabled && terminalChatAgentRegistered && terminalFocusInAny && terminalHasBeenCreated || chatIsEnabled && terminalChatAgentRegistered && terminalFocusInAny && terminalProcessSupported"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-editor.action.triggerSuggest",
+        "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-workbench.action.terminal.suggestToggleDetails",
+        "when": "simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-focusSuggestion",
+        "when": "suggestWidgetVisible && textInputFocus && !suggestWidgetHasFocusedSuggestion"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-inlineChat.holdForSpeech",
+        "when": "hasSpeechProvider && inlineChatVisible && textInputFocus"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-notebook.cell.chat.start",
+        "when": "config.notebook.experimental.cellChat && notebookChatAgentRegistered && notebookEditable && notebookEditorFocused && !inputFocus || config.notebook.experimental.generate && notebookChatAgentRegistered && notebookEditable && notebookEditorFocused && !inputFocus"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-toggleSuggestionDetails",
+        "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-workbench.action.chat.holdToVoiceChatInChatView",
+        "when": "chatIsEnabled && hasSpeechProvider && !chatSessionRequestInProgress && !editorFocus && !inChatInput && !inSettingsEditor && !inlineChatFocused && !notebookEditorFocused && !searchViewletFocus"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-inlineChat.start",
+        "when": "editorFocus && inlineChatHasEditsAgent && inlineChatPossible && !editorReadonly && !editorSimpleInput || editorFocus && inlineChatHasNotebookAgent && inlineChatPossible && !editorReadonly && !editorSimpleInput && activeEditor == 'workbench.editor.notebook' || editorFocus && inlineChatHasNotebookInline && inlineChatPossible && !editorReadonly && !editorSimpleInput && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "extension.wrapTag",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-extension.wrapTag",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+a",
+        "command": "workbench.view.extension.codexViewContainer"
+    },
+    {
+        "key": "ctrl+alt+c",
+        "command": "workbench.panel.chat",
+        "when": "workbench.panel.chat.view.copilot.active"
+    },
+    {
+        "key": "ctrl+alt+i",
+        "command": "-workbench.panel.chat",
+        "when": "workbench.panel.chat.view.copilot.active"
+    },
+    {
+        "key": "ctrl+space",
+        "command": "extension.vim_ctrl+p",
+        "when": "editorTextFocus && vim.active && vim.use<C-p> && !inDebugRepl || vim.active && vim.use<C-p> && !inDebugRepl && vim.mode == 'CommandlineInProgress' || vim.active && vim.use<C-p> && !inDebugRepl && vim.mode == 'SearchInProgressMode'"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "-extension.vim_ctrl+p",
+        "when": "editorTextFocus && vim.active && vim.use<C-p> && !inDebugRepl || vim.active && vim.use<C-p> && !inDebugRepl && vim.mode == 'CommandlineInProgress' || vim.active && vim.use<C-p> && !inDebugRepl && vim.mode == 'SearchInProgressMode'"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "workbench.action.toggleSidebarVisibility"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "-workbench.action.toggleSidebarVisibility"
+    },
+    {
+        "key": "ctrl+alt+contextmenu",
+        "command": "workbench.action.toggleAuxiliaryBar"
+    },
+    {
+        "key": "ctrl+alt+b",
+        "command": "-workbench.action.toggleAuxiliaryBar"
+    },
+    {
+        "key": "ctrl+shift+j",
+        "command": "workbench.action.moveEditorRightInGroup"
+    },
+    {
+        "key": "ctrl+shift+pagedown",
+        "command": "-workbench.action.moveEditorRightInGroup"
+    },
+    {
+        "key": "ctrl+shift+k",
+        "command": "workbench.action.moveEditorLeftInGroup"
+    },
+    {
+        "key": "ctrl+shift+pageup",
+        "command": "-workbench.action.moveEditorLeftInGroup"
+    },
+    {
+        "key": "ctrl+;",
+        "command": "editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "alt+j",
+        "command": "editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+down",
+        "command": "-editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+k",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+up",
+        "command": "-editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+j",
+        "command": "extension.vim_ctrl+pagedown",
+        "when": "editorTextFocus && vim.active && vim.use<C-pagedown> && !inDebugRepl"
+    },
+    {
+        "key": "ctrl+pagedown",
+        "command": "-extension.vim_ctrl+pagedown",
+        "when": "editorTextFocus && vim.active && vim.use<C-pagedown> && !inDebugRepl"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "extension.vim_ctrl+pageup",
+        "when": "editorTextFocus && vim.active && vim.use<C-pageup> && !inDebugRepl"
+    },
+    {
+        "key": "ctrl+pageup",
+        "command": "-extension.vim_ctrl+pageup",
+        "when": "editorTextFocus && vim.active && vim.use<C-pageup> && !inDebugRepl"
+    },
+    {
+        "key": "ctrl+shift+'",
+        "command": "vscode-wezterm.openTerminal"
+    },
+    {
+        "key": "ctrl+t",
+        "command": "workbench.action.terminal.new",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.terminal.focusNext",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.action.terminal.focusPrevious",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+w",
+        "command": "workbench.action.terminal.kill",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "shift+meta+c",
+        "command": "-vscode-wezterm.openTerminal"
+    }
+]

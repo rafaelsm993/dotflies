@@ -1,0 +1,172 @@
+{
+  "explorer.confirmDragAndDrop": false,
+  "editor.formatOnSave": true,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe",
+      ],
+      "args": [],
+      "icon": "terminal-cmd",
+    },
+    "Git Bash": {
+      "source": "Git Bash",
+    },
+    "mssys64": {
+      "path": "C:\\msys64\\msys2.exe",
+      "args": [],
+    },
+  },
+  "explorer.confirmDelete": false,
+  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "bash",
+      "icon": "terminal-bash",
+    },
+    "zsh": {
+      "path": "zsh",
+    },
+    "fish": {
+      "path": "fish",
+    },
+    "tmux": {
+      "path": "tmux",
+      "icon": "terminal-tmux",
+    },
+    "pwsh": {
+      "path": "pwsh",
+      "icon": "terminal-powershell",
+    },
+    "bash (2)": {
+      "path": "/usr/bin/bash",
+    },
+  },
+  "workbench.iconTheme": "glyph.legacy",
+  "redhat.telemetry.enabled": true,
+  "salesforcedx-vscode-apex.java.home": "/usr/lib/jvm/java-21-openjdk",
+  "[python]": {
+    "editor.formatOnType": true,
+  },
+  "salesforcedx-vscode-apex.advanced.enable-completion-statistics": true,
+  "salesforcedx-vscode-apex.enable-semantic-errors": true,
+  "settingsSync.ignoredSettings": ["salesforcedx-vscode-apex.java.home"],
+  "liveServer.settings.donotVerifyTags": true,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+  },
+  "git.suggestSmartCommit": false,
+  "workbench.colorTheme": "Dark+",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
+    "*.sqlite": "${capture}.${extname}-*",
+    "*.db": "${capture}.${extname}-*",
+    "*.sqlite3": "${capture}.${extname}-*",
+    "*.db3": "${capture}.${extname}-*",
+    "*.sdb": "${capture}.${extname}-*",
+    "*.s3db": "${capture}.${extname}-*",
+  },
+  "gitlab.duoCodeSuggestions.additionalLanguages": [
+    "json"
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.fontFamily": "'Droid Sans Mono', monospace",
+  "xml.server.vmargs": "-Xmx1024M",
+  "terminal.explorerKind": "external",
+  "terminal.integrated.fontFamily": "'FiraCode Nerd Font Mono', 'MesloLGM Nerd Font Mono', 'Symbols Nerd Font Mono', monospace",
+  "terminal.integrated.fontLigatures": true,
+  "terminal.integrated.customGlyphs": true,
+  "svelte.enable-ts-plugin": true,
+  "chat.viewSessions.orientation": "stacked",
+  "window.autoDetectColorScheme": false,
+  "workbench.preferredLightColorTheme": "Light+",
+  "workbench.preferredDarkColorTheme": "Dark+",
+  "workbench.browser.showInTitleBar": false,
+  "workbench.openInAgents.enabled": false,
+  "window.commandCenter": false,
+  "workbench.layoutControl.enabled": false,
+  "workbench.editor.editorActionsLocation": "hidden",
+  "window.menuBarVisibility": "compact",
+  "editor.stickyScroll.enabled": false,
+  "breadcrumbs.enabled": false,
+  "workbench.colorCustomizations": {
+    "terminal.background": "#00000000",
+    "editorPane.background": "#00000000",
+    "editorGroupHeader.tabsBackground": "#00000000",
+    "editorGroupHeader.noTabsBackground": "#00000000",
+    "breadcrumb.background": "#00000000",
+    "editorGutter.background": "#00000000",
+    "panel.background": "#00000000",
+    "panelStickyScroll.background": "#00000000",
+    "tab.activeBackground": "#00000000",
+    "tab.unfocusedActiveBackground": "#00000000",
+    "sideBar.background": "#000000b3",
+    "sideBarTitle.background": "#000000b3",
+    "sideBarStickyScroll.background": "#000000b3",
+    "activityBar.background": "#000000b3",
+    "editor.background": "#000000b3",
+    "editorStickyScroll.background": "#000000b3",
+    "editorStickyScrollGutter.background": "#000000b3",
+    "tab.inactiveBackground": "#000000b3",
+    "tab.unfocusedInactiveBackground": "#000000b3",
+    "inlineChat.background": "#000000e6",
+    "editorWidget.background": "#000000e6",
+    "editorHoverWidget.background": "#000000e6",
+    "editorSuggestWidget.background": "#000000e6",
+    "notifications.background": "#000000e6",
+    "notificationCenterHeader.background": "#000000e6",
+    "menu.background": "#000000e6",
+    "quickInput.background": "#000000e6"
+  },
+  "terminal.integrated.gpuAcceleration": "off",
+  "window.controlsStyle": "custom",
+  "vscode_vibrancy.preferedDarkTheme": "Catppuccin Mocha",
+  "vscode_vibrancy.type": "acrylic",
+  "vscode_vibrancy.opacity": 0.7,
+  "vscode_vibrancy.backgroundOverride": "#000000",
+  "workbench.productIconTheme": "material-product-icons",
+  
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.showTabs": "multiple",
+  "vim.handleKeys": {
+    "<C-w>": false
+  },
+  "vim.useCtrlKeys": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["H"],
+      "commands": ["workbench.action.previousEditor"]
+    },
+    {
+      "before": ["L"],
+      "commands": ["workbench.action.nextEditor"]
+    },
+    {
+      "before": ["<leader>", "w"],
+      "commands": ["workbench.action.closeActiveEditor"]
+    }
+  ],
+  "workbench.activityBar.location": "top",
+  "files.autoSave": "afterDelay",
+  "extensions.ignoreRecommendations": true
+}
