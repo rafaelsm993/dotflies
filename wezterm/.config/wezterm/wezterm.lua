@@ -1,27 +1,6 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
 
--- ── Smart pane navigation ──────────────────────────────────────────────────
--- If the focused pane is running (n)vim, send Ctrl-W + direction so vim
--- handles its own splits. Otherwise let WezTerm switch panes.
-local function is_nvim(pane)
-  local proc = pane:get_foreground_process_name()
-  return proc ~= nil and proc:find 'n?vim' ~= nil
-end
-
-local vim_dir = { Left = 'h', Down = 'j', Up = 'k', Right = 'l' }
-
-local function smart_nav(direction)
-  return wezterm.action_callback(function(window, pane)
-    if is_nvim(pane) then
-      -- 0x17 = Ctrl-W; let vim route to its own split
-      window:perform_action(act.SendString('\x17' .. vim_dir[direction]), pane)
-    else
-      window:perform_action(act.ActivatePaneDirection(direction), pane)
-    end
-  end)
-end
-
 -- ── Status bar: show LEADER / key-table mode ───────────────────────────────
 wezterm.on('update-status', function(window, _)
   local stat = ''
@@ -56,7 +35,7 @@ config.color_scheme = 'Tokyo Night'
 config.max_fps = 120
 config.prefer_egl = true
 
--- DEBUG: uncomment to see key events in the debug overlay (CTRL+SHIFT+L)
+-- DEBUG: press CTRL+SHIFT+L in wezterm to open the overlay
 -- config.debug_key_events = true
 
 -- Disable defaults to prevent silent conflicts with the custom layout below
@@ -82,27 +61,27 @@ config.keys = {
   -- ── Copy / paste (explicit, since defaults are disabled) ──────────────────
   { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo 'Clipboard' },
   { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
+  { key = 'l', mods = 'CTRL|SHIFT', action = act.ShowDebugOverlay },
 
   -- ── Splits ───────────────────────────────────────────────────────────────
-  -- <leader>|  split right  (vertical divider)
-  { key = '|', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-  -- <leader>-  split down   (horizontal divider)
-  { key = '-', mods = 'LEADER', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
+  { key = '\\', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  { key = '-',  mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
 
-  -- ── Pane navigation (vim-aware) ──────────────────────────────────────────
-  { key = 'h', mods = 'LEADER', action = smart_nav 'Left' },
-  { key = 'j', mods = 'LEADER', action = smart_nav 'Down' },
-  { key = 'k', mods = 'LEADER', action = smart_nav 'Up' },
-  { key = 'l', mods = 'LEADER', action = smart_nav 'Right' },
+  -- ── Pane navigation ───────────────────────────────────────────────────────
+  { key = 'h', mods = 'LEADER', action = act.ActivatePaneDirection 'Left' },
+  { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection 'Down' },
+  { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection 'Up' },
+  { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection 'Right' },
 
   -- ── Pane management ──────────────────────────────────────────────────────
-  { key = 'z', mods = 'LEADER', action = act.TogglePaneZoomState },
+  { key = 'f', mods = 'LEADER', action = act.TogglePaneZoomState },
   { key = 'x', mods = 'LEADER', action = act.CloseCurrentPane { confirm = true } },
+  { key = 'w', mods = 'LEADER', action = act.CloseCurrentTab { confirm = true } },
   -- <leader>r  enter resize mode (h/j/k/l to resize, q/Esc to exit)
   { key = 'r', mods = 'LEADER', action = act.ActivateKeyTable { name = 'resize_pane', one_shot = false } },
 
   -- ── Tabs ─────────────────────────────────────────────────────────────────
-  { key = 'c', mods = 'LEADER', action = act.SpawnTab 'CurrentPaneDomain' },
+  { key = 't', mods = 'LEADER', action = act.SpawnTab 'CurrentPaneDomain' },
   { key = 'n', mods = 'LEADER', action = act.ActivateTabRelative(1) },
   { key = 'p', mods = 'LEADER', action = act.ActivateTabRelative(-1) },
   -- <leader>1-9  jump directly to tab
@@ -132,7 +111,6 @@ config.keys = {
   { key = '/', mods = 'LEADER', action = act.Search { CaseSensitiveString = '' } },
 
   -- ── Misc ──────────────────────────────────────────────────────────────────
-  { key = 'f',     mods = 'LEADER',       action = act.ToggleFullScreen },
   -- Pass CTRL+Space through to the running app when needed
   { key = 'Space', mods = 'LEADER|CTRL',  action = act.SendKey { key = 'Space', mods = 'CTRL' } },
 }
