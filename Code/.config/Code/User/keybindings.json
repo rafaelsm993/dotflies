@@ -345,5 +345,17 @@
     {
         "key": "shift+meta+c",
         "command": "-vscode-wezterm.openTerminal"
+    },
+    {
+        "key": "alt+f",
+        "command": "sf.metadata.source.diff"
+    },
+    {
+        "key": "alt+r",
+        "command": "sf.metadata.retrieve.current.source.file"
+    },
+    {
+        "key": "alt+d",
+        "command": "sf.metadata.deploy.active.editor"
     }
 ]

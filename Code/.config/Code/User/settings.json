@@ -140,10 +140,10 @@
   },
   "terminal.integrated.gpuAcceleration": "off",
   "window.controlsStyle": "custom",
-  "vscode_vibrancy.preferedDarkTheme": "Catppuccin Mocha",
-  "vscode_vibrancy.type": "acrylic",
+  "vscode_vibrancy.type": "transparent",
   "vscode_vibrancy.opacity": 0.7,
   "vscode_vibrancy.backgroundOverride": "#000000",
+  "vscode_vibrancy.disableFramelessWindow": true, 
   "workbench.productIconTheme": "material-product-icons",
   
   "workbench.editor.enablePreview": false,
@@ -168,5 +168,6 @@
   ],
   "workbench.activityBar.location": "top",
   "files.autoSave": "afterDelay",
-  "extensions.ignoreRecommendations": true
+  "extensions.ignoreRecommendations": true,
+  "window.systemColorTheme": "dark"
 }

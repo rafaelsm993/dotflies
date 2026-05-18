@@ -21,7 +21,9 @@ stow -n wezterm    # dry run
 Currently stowed: `wezterm`, `Code`.  
 **Not yet stowed**: `nvim/`, `fish/`, `fastfetch/` — their contents live directly in `~/.config/` as real directories (not symlinked). To stow them, nest files under `<package>/.config/<name>/` then run `stow <package>`.
 
-> **⚠ Machine-specific paths**: `.stowrc` contains hardcoded `--target` and `--dir` paths. Update both when cloning on a new machine.
+> **⚠ Machine-specific paths**: `.stowrc` contains hardcoded `--target` and `--dir` paths. Update both when cloning on a new machine:
+> - `--target` → absolute path to `~/` on the new machine
+> - `--dir` → absolute path to this repo's root
 
 ## Lua Formatting (Neovim config)
 
@@ -40,8 +42,10 @@ stylua nvim/           # format in-place
 
 Built on **kickstart.nvim**. The config is split across:
 - `nvim/.config/nvim/init.lua` — single file with all core options, keymaps, and plugin specs
-- `nvim/.config/nvim/lua/kickstart/plugins/` — optional kickstart extras (all commented out in `init.lua`; uncomment to enable)
-- `nvim/.config/nvim/lua/custom/plugins/` — user plugins; every `.lua` file here is auto-imported by lazy.nvim and must return a `LazySpec` table
+- `nvim/.config/nvim/lua/kickstart/plugins/` — optional kickstart extras; each must be manually uncommented via `require 'kickstart.plugins.<name>'` near the bottom of `init.lua`
+- `nvim/.config/nvim/lua/custom/plugins/` — user plugins; every `.lua` file here is **auto-imported** by lazy.nvim (via `{ import = 'custom.plugins' }`) and must return a `LazySpec` table
+
+> **`lazy-lock.json` is gitignored** (kickstart default). To pin plugin versions in your fork, remove `lazy-lock.json` from `nvim/.config/nvim/.gitignore` and commit it.
 
 **Requires Neovim 0.11+** — `salesforce.lua` uses the `vim.lsp.config()` / `vim.lsp.enable()` API introduced in 0.11.
 
@@ -66,6 +70,7 @@ Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`.
 - Leader key: `<space>`
 - New plugins go in `lua/custom/plugins/<name>.lua` and must return a `LazySpec` table — annotate the file with `---@module 'lazy'` / `---@type LazySpec` for LSP type checking
 - `lua/custom/plugins/init.lua` is a placeholder returning `{}`; do not put plugins there — every other `.lua` file in that directory is auto-imported by lazy.nvim
+- `bufferline.lua` uses `config` (not `opts`) as an intentional exception — it has complex palette logic that must run after tokyonight loads
 - Use `opts = {}` shorthand instead of `config = function() require('X').setup({}) end` when no extra logic is needed
 - Annotate `opts` tables with `---@module 'X'` and `---@type X.Config` for LSP type checking
 - Background is transparent (Normal bg = none, set via autocommand on ColorScheme in `init.lua`)
