@@ -1,6 +1,23 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
 
+-- ── Transparency toggle ────────────────────────────────────────────────────
+-- Toggles window_background_opacity between transparent (0.85) and opaque (1.0).
+-- Neovim inherits automatically via `Normal bg = none`.
+-- Trigger with <leader>o.
+local OPACITY_ON = 0.85
+local OPACITY_OFF = 1.0
+
+wezterm.on('toggle-transparency', function(window)
+  local overrides = window:get_config_overrides() or {}
+  if (overrides.window_background_opacity or OPACITY_ON) >= OPACITY_OFF then
+    overrides.window_background_opacity = OPACITY_ON
+  else
+    overrides.window_background_opacity = OPACITY_OFF
+  end
+  window:set_config_overrides(overrides)
+end)
+
 -- ── Status bar: show LEADER / key-table mode ───────────────────────────────
 wezterm.on('update-status', function(window, _)
   local stat = ''
@@ -30,7 +47,7 @@ config.line_height = 1.2
 config.cursor_blink_rate = 0
 config.hide_tab_bar_if_only_one_tab = true
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
-config.window_background_opacity = 1.0
+config.window_background_opacity = OPACITY_ON
 config.color_scheme = 'Tokyo Night'
 config.max_fps = 120
 config.prefer_egl = true
@@ -113,6 +130,8 @@ config.keys = {
   -- ── Misc ──────────────────────────────────────────────────────────────────
   -- Pass CTRL+Space through to the running app when needed
   { key = 'Space', mods = 'LEADER|CTRL',  action = act.SendKey { key = 'Space', mods = 'CTRL' } },
+  -- Toggle terminal + Neovim transparency (Hyprland blur effect)
+  { key = 'o',     mods = 'LEADER',       action = act.EmitEvent 'toggle-transparency' },
 }
 
 return config

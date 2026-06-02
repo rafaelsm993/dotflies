@@ -165,6 +165,51 @@ vim.o.diffopt = 'internal,filler,closeoff,context:3,linematch:60,algorithm:histo
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Fold display: keep treesitter colours (foldtext='') and append " … }" via virtual text
+vim.opt.foldtext = ''
+vim.opt.fillchars:append { fold = ' ' }
+
+do
+  local ns = vim.api.nvim_create_namespace 'fold_vtext'
+  local pending = {}
+
+  local function refresh_fold_vtext(buf)
+    if not vim.api.nvim_buf_is_valid(buf) then return end
+    vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+    local n = vim.api.nvim_buf_line_count(buf)
+    local row = 0
+    while row < n do
+      local fc = vim.fn.foldclosed(row + 1)
+      if fc == row + 1 then
+        local fe = vim.fn.foldclosedend(row + 1)
+        if fe > row + 1 then
+          local last = vim.trim(vim.fn.getline(fe))
+          vim.api.nvim_buf_set_extmark(buf, ns, row, 0, {
+            virt_text = { { ' … ' .. last, 'Comment' } },
+            virt_text_pos = 'eol',
+            priority = 100,
+          })
+        end
+        row = fe > row and fe or row + 1
+      else
+        row = row + 1
+      end
+    end
+  end
+
+  vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorMoved' }, {
+    group = vim.api.nvim_create_augroup('fold-vtext', { clear = true }),
+    callback = function(args)
+      if pending[args.buf] then return end
+      pending[args.buf] = true
+      vim.schedule(function()
+        pending[args.buf] = nil
+        refresh_fold_vtext(args.buf)
+      end)
+    end,
+  })
+end
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -189,6 +234,20 @@ vim.diagnostic.config {
 }
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- Toggle Neovim background transparency independently of the terminal.
+-- Useful when WezTerm is transparent but you want a solid Neovim bg for readability.
+vim.keymap.set('n', '<leader>uT', function()
+  local hl = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+  if hl.bg then
+    vim.api.nvim_set_hl(0, 'Normal', { bg = 'none', ctermbg = 'none' })
+    vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none', ctermbg = 'none' })
+    vim.notify('Neovim: transparent background', vim.log.levels.INFO)
+  else
+    vim.cmd 'colorscheme tokyonight'
+    vim.notify('Neovim: opaque background', vim.log.levels.INFO)
+  end
+end, { desc = '[U]I: [T]oggle Neovim transparency' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -234,6 +293,11 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   pattern = '*',
   callback = function()
     vim.api.nvim_set_hl(0, 'Normal', { bg = 'none', ctermbg = 'none' })
+    -- Dim static indent guides; mini.indentscope uses MiniIndentscopeSymbol for the active scope
+    vim.api.nvim_set_hl(0, 'IblIndent', { fg = '#2a2f45', nocombine = true })
+    vim.api.nvim_set_hl(0, 'MiniIndentscopeSymbol', { fg = '#565f89', nocombine = true })
+    -- Folded lines: no background, just slightly dimmed — first line shows with treesitter colours
+    vim.api.nvim_set_hl(0, 'Folded', { bg = 'none', fg = '#565f89', italic = true })
   end,
 })
 vim.cmd 'highlight Normal ctermbg=none guibg=none'
@@ -618,6 +682,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
+        ts_ls = {}, -- JavaScript / TypeScript — powers gd, hover, references for LWC and JS files
 
         stylua = {}, -- Used to format Lua code
 
@@ -754,31 +819,18 @@ require('lazy').setup({
     ---@type blink.cmp.Config
     opts = {
       keymap = {
-        -- 'default' (recommended) for mappings similar to built-in completions
-        --   <c-y> to accept ([y]es) the completion.
-        --    This will auto-import if your LSP supports it.
-        --    This will expand snippets if the LSP sent a snippet.
-        -- 'super-tab' for tab to accept
-        -- 'enter' for enter to accept
-        -- 'none' for no mappings
-        --
-        -- For an understanding of why the 'default' preset is recommended,
-        -- you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
-        --
-        -- All presets have the following mappings:
-        -- <tab>/<s-tab>: move to right/left of your snippet expansion
-        -- <c-space>: Open menu or open docs if already open
-        -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
-        -- <c-e>: Hide menu
-        -- <c-k>: Toggle signature help
-        --
-        -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
-
-        -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-        --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+        preset = 'none',
+        ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+        ['<C-e>'] = { 'hide' },
+        ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        -- Tab: navigate items when menu is open, else indent
+        ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+        ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+        -- Enter: accept selected item (or fallback to normal Enter)
+        ['<CR>'] = { 'accept', 'fallback' },
+        -- Keep Ctrl-n/p as alternatives
+        ['<C-n>'] = { 'select_next', 'fallback' },
+        ['<C-p>'] = { 'select_prev', 'fallback' },
       },
 
       appearance = {
@@ -900,7 +952,7 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = { 'bash', 'c', 'diff', 'html', 'jsdoc', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
@@ -913,8 +965,9 @@ require('lazy').setup({
 
         -- enables treesitter based folds
         -- for more info on folds see `:help folds`
-        -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-        -- vim.wo.foldmethod = 'expr'
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.wo.foldmethod = 'expr'
+        vim.wo.foldlevel = 99 -- start with all folds open
 
         -- check if treesitter indentation is available for this language, and if so enable it
         -- in case there is no indent query, the indentexpr will fallback to the vim's built in one
@@ -959,7 +1012,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',

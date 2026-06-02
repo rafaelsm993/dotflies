@@ -5,7 +5,7 @@
 ---@module 'lazy'
 ---@type LazySpec
 return {
-  -- Filetype detection for Salesforce file extensions
+  -- Filetype detection for Salesforce file extensions + treesitter folding for apex
   {
     'nvim-treesitter/nvim-treesitter',
     optional = true,
@@ -17,6 +17,20 @@ return {
           apex = 'apex',
         },
       }
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'apex',
+        callback = function(args)
+          vim.treesitter.start(args.buf, 'apex') -- explicit attach, bypasses nvim-treesitter's get_installed check
+          vim.wo.foldmethod = 'expr'
+          vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          vim.wo.foldlevel = 99 -- start with all folds open
+          vim.wo.foldtext = "v:lua.require('custom.apex_foldtext').foldtext()"
+          vim.wo.fillchars = 'fold: ' -- suppress trailing ··· dots
+          -- Remove the Folded background highlight for apex windows only
+          vim.api.nvim_set_hl(0, 'ApexFolded', { bg = 'NONE' })
+          vim.wo.winhighlight = 'Folded:ApexFolded'
+        end,
+      })
     end,
   },
 
@@ -37,16 +51,24 @@ return {
       },
     },
     init = function()
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'LazyDone',
-        once = true,
-        callback = function()
-          vim.lsp.config('apex_ls', {
-            apex_jar_path = vim.fn.stdpath 'data' .. '/mason/share/apex-language-server/apex-jorje-lsp.jar',
-          })
-          vim.lsp.enable 'apex_ls'
+      local jar = vim.fn.stdpath 'data' .. '/mason/share/apex-language-server/apex-jorje-lsp.jar'
+      local java = (vim.env.JAVA_HOME and (vim.env.JAVA_HOME .. '/bin/java')) or 'java'
+      vim.lsp.config('apex_ls', {
+        cmd = {
+          java,
+          '-cp', jar,
+          '-Ddebug.internal.errors=true',
+          '-Ddebug.semantic.errors=false',
+          '-Ddebug.completion.statistics=false',
+          '-Dlwc.typegeneration.disabled=true',
+          'apex.jorje.lsp.ApexLanguageServerLauncher',
+        },
+        filetypes = { 'apex' },
+        root_dir = function(bufnr, on_dir)
+          on_dir(vim.fs.root(bufnr, { 'sfdx-project.json' }))
         end,
       })
+      vim.lsp.enable 'apex_ls'
     end,
   },
 

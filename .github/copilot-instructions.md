@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-Personal dotfiles for **kanoah** targeting both CachyOS Linux and Windows environments. Contains configurations for: Neovim, Fish shell, FastFetch, WezTerm, PowerShell, and VS Code.
+Personal dotfiles for **kanoah** targeting CachyOS Linux. Contains configurations for: Neovim, Fish shell, FastFetch, and WezTerm.
 
 ## GNU Stow
 
@@ -16,9 +16,8 @@ stow -n wezterm    # dry run
 
 **Package directory structure**: each top-level folder is a stow package. Files must be nested to mirror `~/`. For example:
 - `wezterm/.config/wezterm/wezterm.lua` → `~/.config/wezterm/wezterm.lua`
-- `Code/User/settings.json` → `~/.config/Code/User/settings.json` (VS Code on Linux)
 
-Currently stowed: `wezterm`, `Code`.  
+Currently stowed: `wezterm`.  
 **Not yet stowed**: `nvim/`, `fish/`, `fastfetch/` — their contents live directly in `~/.config/` as real directories (not symlinked). To stow them, nest files under `<package>/.config/<name>/` then run `stow <package>`.
 
 > **⚠ Machine-specific paths**: `.stowrc` contains hardcoded `--target` and `--dir` paths. Update both when cloning on a new machine:
@@ -42,10 +41,12 @@ stylua nvim/           # format in-place
 
 Built on **kickstart.nvim**. The config is split across:
 - `nvim/.config/nvim/init.lua` — single file with all core options, keymaps, and plugin specs
-- `nvim/.config/nvim/lua/kickstart/plugins/` — optional kickstart extras; each must be manually uncommented via `require 'kickstart.plugins.<name>'` near the bottom of `init.lua`
+- `nvim/.config/nvim/lua/kickstart/plugins/` — optional kickstart extras (all currently commented out in `init.lua`); each must be manually uncommented via `require 'kickstart.plugins.<name>'` near the bottom of `init.lua`. Available extras: `autopairs`, `debug`, `gitsigns`, `indent_line`, `lint`, `neo-tree`
 - `nvim/.config/nvim/lua/custom/plugins/` — user plugins; every `.lua` file here is **auto-imported** by lazy.nvim (via `{ import = 'custom.plugins' }`) and must return a `LazySpec` table
 
 > **`lazy-lock.json` is gitignored** (kickstart default). To pin plugin versions in your fork, remove `lazy-lock.json` from `nvim/.config/nvim/.gitignore` and commit it.
+
+**JavaScript/TypeScript LSP**: `ts_ls` is enabled in the `servers` table and handles `gd`/hover/references for `.js` and `.ts` files. LWC projects need a `jsconfig.json` at the project root mapping virtual imports (`@salesforce/apex/*`, `@salesforce/schema/*`, `lwc`, etc.) to `[]` to suppress false "module not found" errors — see `tramontina-sf/jsconfig.json` for the template.
 
 **Requires Neovim 0.11+** — `salesforce.lua` uses the `vim.lsp.config()` / `vim.lsp.enable()` API introduced in 0.11.
 
@@ -55,7 +56,8 @@ Built on **kickstart.nvim**. The config is split across:
 **Completion**: blink.cmp + LuaSnip + blink-copilot (Copilot inline suggestions via ghost text)  
 **Fuzzy finder**: Telescope (`enabled` flag in init.lua can swap it for snacks/fzf-lua)  
 **File manager**: yazi.nvim (`<leader>-` to open, `<c-up>` to toggle)  
-**AI**: CopilotChat.nvim (`claude-opus-4.7`), keys under `<leader>c*`
+**Colorizer**: nvim-colorizer.lua — inline virtual text (`■`) showing color previews for all filetypes  
+**Treesitter context**: nvim-treesitter-context — sticky top context bar, max 3 lines; `[c` jumps up to context
 
 ### Adding an LSP server
 
@@ -63,15 +65,15 @@ Add the Mason tool name to the `servers` table in `init.lua`. For servers with M
 
 ### Adding a formatter
 
-Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`. To enable auto-format on save for a filetype, add it to the `enabled_filetypes` table in the `format_on_save` function.
+Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`. To enable auto-format on save for a filetype, add it to the `enabled_filetypes` table in the `format_on_save` function. Currently all entries in `enabled_filetypes` are commented out — auto-format on save is disabled for all filetypes by default.
 
 ## Key Neovim Conventions
 
 - Leader key: `<space>`
 - New plugins go in `lua/custom/plugins/<name>.lua` and must return a `LazySpec` table — annotate the file with `---@module 'lazy'` / `---@type LazySpec` for LSP type checking
 - `lua/custom/plugins/init.lua` is a placeholder returning `{}`; do not put plugins there — every other `.lua` file in that directory is auto-imported by lazy.nvim
-- `bufferline.lua` uses `config` (not `opts`) as an intentional exception — it has complex palette logic that must run after tokyonight loads
 - Use `opts = {}` shorthand instead of `config = function() require('X').setup({}) end` when no extra logic is needed
+- Use `config` (not `opts`) when post-setup work is required: e.g., `bufferline.lua` (palette logic must run after tokyonight loads), `treesitter-context.lua` (custom highlight autocommands after setup)
 - Annotate `opts` tables with `---@module 'X'` and `---@type X.Config` for LSP type checking
 - Background is transparent (Normal bg = none, set via autocommand on ColorScheme in `init.lua`)
 - Augroup names: `kickstart-*` prefix for built-ins; use a distinct prefix for custom groups
@@ -81,11 +83,12 @@ Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`.
 
 **Buffers** (bufferline.nvim):
 - `<S-l>` / `<S-h>` — cycle next/prev buffer
+- `<M-S-l>` / `<M-S-h>` — move buffer right/left
 - `<leader>bx` / `<leader>bX` — close current / close others
 - `<leader>bp` — pin/unpin buffer
 - `<leader>b1`–`<leader>b5` — jump to buffer by position
 
-**Git** (lazygit.nvim + diffview.nvim):
+**Git** (lazygit.nvim + diffview.nvim — requires `lazygit` binary in PATH):
 - `<leader>gg` — open LazyGit
 - `<leader>gf` / `<leader>gl` / `<leader>gL` — LazyGit (current file / repo log / file log)
 - `<leader>gd` / `<leader>gD` — diff working tree / vs last commit
@@ -96,8 +99,6 @@ Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`.
 - `<leader>-` — open yazi at current file
 - `<leader>cw` — open yazi at nvim's cwd
 - `<c-up>` — resume last yazi session
-
-**AI** (CopilotChat.nvim): keys under `<leader>c*`
 
 ## Custom Treesitter Queries
 
@@ -126,14 +127,12 @@ Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`.
 `lua/custom/plugins/copilot.lua` wires `zbirenbaum/copilot.lua` + `blink-copilot` into blink.cmp.  
 **Node version constraint**: requires Node 24 specifically (not 26). Managed via `mise use --global node@24`.
 
-## VS Code
-
-`Code/User/` contains `settings.json` and `keybindings.json`, stowed to `~/.config/Code/User/`.
-
 ## Shell / Prompt
 
 - **Fish** (`fish/.config/fish/config.fish`): sources CachyOS base config, activates `mise`, then initializes oh-my-posh with the `catppuccin_mocha` theme fetched from the upstream URL
-- **PowerShell** (`PowerShell/Microsoft.PowerShell_profile.ps1`): UTF-8 encoding, FastFetch on startup, WinGet CommandNotFound module
+  - `conf.d/` — drop additional `.fish` files here for auto-sourced configs (e.g., tool activations, path additions)
+  - `functions/` — custom fish functions; each `<name>.fish` file auto-defines the `<name>` command
+  - `completions/` — custom tab-completion scripts
 
 ## Color Theme
 
@@ -147,8 +146,6 @@ Tracked at `wezterm/.config/wezterm/wezterm.lua`. Key settings:
 - **Tab bar**: plain style (`use_fancy_tab_bar = false`), positioned at bottom, hidden when only one tab open
 - **Window**: no decorations except resize handle (`RESIZE`), zero padding, `window_close_confirmation = "NeverPrompt"`
 - **Performance**: `max_fps = 120`, `prefer_egl = true`, static cursor (`cursor_blink_rate = 0`)
-
-
 
 ## FastFetch
 

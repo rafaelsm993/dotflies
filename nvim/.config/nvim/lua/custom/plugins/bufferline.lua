@@ -47,6 +47,8 @@ return {
     keys = {
       { '<S-l>',      '<cmd>BufferLineCycleNext<cr>',      desc = 'Next buffer tab' },
       { '<S-h>',      '<cmd>BufferLineCyclePrev<cr>',      desc = 'Prev buffer tab' },
+      { '<M-S-l>',    '<cmd>BufferLineMoveNext<cr>',       desc = '[B]uffer: move right' },
+      { '<M-S-h>',    '<cmd>BufferLineMovePrev<cr>',       desc = '[B]uffer: move left' },
       { '<leader>bx', '<cmd>bdelete<cr>',                  desc = '[B]uffer: close' },
       { '<leader>bX', '<cmd>BufferLineCloseOthers<cr>',    desc = '[B]uffer: close others' },
       { '<leader>bp', '<cmd>BufferLineTogglePin<cr>',      desc = '[B]uffer: pin/unpin' },
