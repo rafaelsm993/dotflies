@@ -27,7 +27,7 @@ local terminal    = "wezterm"
 local fileManager = "dolphin"
 
 -- Noctalia IPC helper
-local function noc(cmd) return hl.dsp.exec_cmd("qs -c noctalia-shell ipc call " .. cmd) end
+local function noc(cmd) return hl.dsp.exec_cmd("noctalia msg " .. cmd) end
 
 
 -------------------
@@ -261,18 +261,18 @@ hl.bind(mainMod .. " + V",         hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + F",         hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo())
 
--- ── Noctalia Shell IPC ───────────────────────────────────────────────────────
-hl.bind(mainMod .. " + space",       noc "launcher toggle")
-hl.bind(mainMod .. " + Tab",         noc "launcher windows")
-hl.bind(mainMod .. " + SHIFT + V",   noc "launcher clipboard")
-hl.bind(mainMod .. " + period",      noc "launcher emoji")
-hl.bind(mainMod .. " + O",           noc "controlCenter toggle")
-hl.bind(mainMod .. " + comma",       noc "settings toggle")
-hl.bind(mainMod .. " + A",           noc "calendar toggle")
-hl.bind(mainMod .. " + M",           noc "systemMonitor toggle")
-hl.bind(mainMod .. " + X",           noc "sessionMenu toggle")
-hl.bind(mainMod .. " + SHIFT + X",   noc "sessionMenu lockAndSuspend")
-hl.bind(mainMod .. " + Escape",      noc "lockScreen lock")
+-- ── Noctalia Shell ───────────────────────────────────────────────────────────
+hl.bind(mainMod .. " + space",       noc "panel-toggle launcher")
+hl.bind(mainMod .. " + Tab",         noc "window-switcher")
+hl.bind(mainMod .. " + SHIFT + V",   noc "panel-open launcher /clip")
+hl.bind(mainMod .. " + period",      noc "panel-open launcher /emo")
+hl.bind(mainMod .. " + O",           noc "panel-toggle control-center")
+hl.bind(mainMod .. " + comma",       noc "settings-toggle")
+hl.bind(mainMod .. " + A",           noc "panel-toggle calendar")
+hl.bind(mainMod .. " + M",           noc "panel-toggle system-monitor")
+hl.bind(mainMod .. " + X",           noc "panel-toggle session-menu")
+hl.bind(mainMod .. " + SHIFT + X",   noc "session lock-and-suspend")
+hl.bind(mainMod .. " + Escape",      noc "session lock")
 
 -- ── Scrolling layout — focus ──────────────────────────────────────────────────
 hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left" }))
@@ -296,7 +296,7 @@ hl.bind(mainMod .. " + bracketleft", hl.dsp.layout "consume_or_expel prev")
 hl.bind(mainMod .. " + G",           hl.dsp.layout "consume")          -- pull next window into column
 hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.layout "expel")            -- eject window from column
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout "promote")       -- promote to own column
-hl.bind(mainMod .. " + BackSpace",   hl.dsp.layout "fit active")       -- fit focused column
+hl.bind(mainMod .. " + BackSpace",         hl.dsp.layout "fit active")  -- fit focused column into view
 hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout "fit all")    -- fit all columns
 
 -- ── Workspaces ────────────────────────────────────────────────────────────────
