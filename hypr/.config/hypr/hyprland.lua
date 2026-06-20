@@ -24,6 +24,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "wezterm"
+local browser     = "vivaldi"
 local fileManager = "dolphin"
 
 -- Noctalia IPC helper
@@ -254,12 +255,14 @@ hl.device({
 local mainMod = "SUPER"
 
 -- ── Apps ─────────────────────────────────────────────────────────────────────
-hl.bind(mainMod .. " + Q",         hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + C",         hl.dsp.window.close())
-hl.bind(mainMod .. " + V",         hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + F",         hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + Return",     hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + W",          hl.dsp.window.close())
+hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + F",          hl.dsp.layout "colresize 1.0")    -- maximize column width
+hl.bind(mainMod .. " + SHIFT + F",  hl.dsp.window.fullscreen())        -- actual fullscreen
+hl.bind(mainMod .. " + P",          hl.dsp.window.pseudo())
 
 -- ── Noctalia Shell ───────────────────────────────────────────────────────────
 hl.bind(mainMod .. " + space",       noc "panel-toggle launcher")
@@ -275,6 +278,7 @@ hl.bind(mainMod .. " + SHIFT + X",   noc "session lock-and-suspend")
 hl.bind(mainMod .. " + Escape",      noc "session lock")
 
 -- ── Scrolling layout — focus ──────────────────────────────────────────────────
+-- Horizontal: move between columns; Vertical: move between stacked windows in a column
 hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + L",     hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K",     hl.dsp.focus({ direction = "up" }))
@@ -291,10 +295,13 @@ hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout "swapcol l")        -- swap w
 hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout "swapcol r")        -- swap with right neighbor
 hl.bind(mainMod .. " + R",           hl.dsp.layout "colresize +conf")  -- cycle width fwd
 hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout "colresize -conf")  -- cycle width back
+-- Stack windows vertically (Niri-style consume/expel)
+-- Super+G: pull the window to the right into the current column (stack below)
+-- Super+Shift+G: eject the focused window into its own column
+hl.bind(mainMod .. " + G",           hl.dsp.layout "consume")
+hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.layout "expel")
 hl.bind(mainMod .. " + bracketright",hl.dsp.layout "consume_or_expel next")
 hl.bind(mainMod .. " + bracketleft", hl.dsp.layout "consume_or_expel prev")
-hl.bind(mainMod .. " + G",           hl.dsp.layout "consume")          -- pull next window into column
-hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.layout "expel")            -- eject window from column
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout "promote")       -- promote to own column
 hl.bind(mainMod .. " + BackSpace",         hl.dsp.layout "fit active")  -- fit focused column into view
 hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout "fit all")    -- fit all columns
