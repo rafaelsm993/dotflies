@@ -17,7 +17,7 @@ stow -n wezterm    # dry run
 **Package directory structure**: each top-level folder is a stow package. Files must be nested to mirror `~/`. For example:
 - `wezterm/.config/wezterm/wezterm.lua` → `~/.config/wezterm/wezterm.lua`
 
-Currently stowed: `wezterm`, `nvim`, `fish`, `fastfetch`, `hypr`.
+Currently stowed: `wezterm`, `nvim`, `fish`, `fastfetch`, `hypr`, `noctalia`.
 
 > **⚠ Machine-specific paths**: `.stowrc` contains hardcoded `--target` and `--dir` paths. Update both when cloning on a new machine:
 > - `--target` → absolute path to `~/` on the new machine
