@@ -17,7 +17,7 @@ stow -n wezterm    # dry run
 **Package directory structure**: each top-level folder is a stow package. Files must be nested to mirror `~/`. For example:
 - `wezterm/.config/wezterm/wezterm.lua` → `~/.config/wezterm/wezterm.lua`
 
-Currently stowed: `wezterm`, `nvim`, `fish`, `fastfetch`.
+Currently stowed: `wezterm`, `nvim`, `fish`, `fastfetch`, `hypr`.
 
 > **⚠ Machine-specific paths**: `.stowrc` contains hardcoded `--target` and `--dir` paths. Update both when cloning on a new machine:
 > - `--target` → absolute path to `~/` on the new machine
@@ -40,7 +40,7 @@ stylua nvim/           # format in-place
 
 Built on **kickstart.nvim**. The config is split across:
 - `nvim/.config/nvim/init.lua` — single file with all core options, keymaps, and plugin specs
-- `nvim/.config/nvim/lua/kickstart/plugins/` — optional kickstart extras (all currently commented out in `init.lua`); each must be manually uncommented via `require 'kickstart.plugins.<name>'` near the bottom of `init.lua`. Available extras: `autopairs`, `debug`, `gitsigns`, `indent_line`, `lint`, `neo-tree`
+- `nvim/.config/nvim/lua/kickstart/plugins/` — optional kickstart extras; each must be manually uncommented via `require 'kickstart.plugins.<name>'` near the bottom of `init.lua`. Currently enabled: `gitsigns`, `indent_line`. Available but commented out: `autopairs`, `debug`, `lint`, `neo-tree`
 - `nvim/.config/nvim/lua/custom/plugins/` — user plugins; every `.lua` file here is **auto-imported** by lazy.nvim (via `{ import = 'custom.plugins' }`) and must return a `LazySpec` table
 
 > **`lazy-lock.json` is gitignored** (kickstart default). To pin plugin versions in your fork, remove `lazy-lock.json` from `nvim/.config/nvim/.gitignore` and commit it.
@@ -56,7 +56,8 @@ Built on **kickstart.nvim**. The config is split across:
 **Fuzzy finder**: Telescope (`enabled` flag in init.lua can swap it for snacks/fzf-lua)  
 **File manager**: yazi.nvim (`<leader>-` to open, `<c-up>` to toggle)  
 **Colorizer**: nvim-colorizer.lua — inline virtual text (`■`) showing color previews for all filetypes  
-**Treesitter context**: nvim-treesitter-context — sticky top context bar, max 3 lines; `[c` jumps up to context
+**Treesitter context**: nvim-treesitter-context — sticky top context bar, max 3 lines; `[c` jumps up to context  
+**Indentation**: indent-blankline.nvim (static dim guides, `optional = true` — extends kickstart's `indent_line` extra if enabled) + mini.indentscope (animated current-scope highlight, always active)
 
 ### Adding an LSP server
 
@@ -102,6 +103,25 @@ Add the formatter under `conform.nvim`'s `formatters_by_ft` table in `init.lua`.
 ## Custom Treesitter Queries
 
 `nvim/.config/nvim/queries/apex/` contains custom treesitter queries for the Apex language (currently `folds.scm`). Place additional `.scm` files there to extend treesitter behavior for Apex.
+
+## Custom Lua Modules
+
+`nvim/.config/nvim/lua/custom/` holds two kinds of Lua code:
+- `plugins/` — lazy.nvim plugin specs (auto-imported, must return a `LazySpec` table)
+- standalone modules — plain Lua modules required explicitly; e.g., `apex_foldtext.lua` provides syntax-highlighted fold text for Apex files (referenced via `vim.wo.foldtext = "v:lua.require('custom.apex_foldtext').foldtext()"` in `salesforce.lua`)
+
+## Database UI
+
+**`dadbod.lua`** — SQL database explorer via vim-dadbod + vim-dadbod-ui:
+- `<leader>db` / `:DBUI` — toggle the database sidebar
+- SQLite connection string format: `sqlite:path/to/file.db3`
+- Completions available for `sql`, `mysql`, `plsql` filetypes
+
+## Matugen Dynamic Theming
+
+`nvim/.config/nvim/lua/matugen.lua` + `lua/plugins/base16.lua` — optional dynamic color scheme driven by [matugen](https://github.com/InioX/matugen).
+- Sends `SIGUSR1` to the Neovim process to hot-reload colors without restarting
+- `lua/plugins/` is **not** auto-imported by lazy.nvim (unlike `lua/custom/plugins/`) — files there must be explicitly required
 
 ## Salesforce Plugins
 
