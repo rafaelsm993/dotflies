@@ -289,14 +289,15 @@ hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 
 -- ── Scrolling layout — column manipulation ────────────────────────────────────
--- H/L: move the focused column left/right
--- J/K: swap the focused window down/up within its column
-hl.bind(mainMod .. " + SHIFT + H",   hl.dsp.layout("move -col"))
-hl.bind(mainMod .. " + SHIFT + L",   hl.dsp.layout("move +col"))
+-- Shift+H/L: swap the focused column with its left/right neighbor
+-- Shift+J/K: swap the focused window up/down within its column
+hl.bind(mainMod .. " + SHIFT + H",   hl.dsp.layout("swapcol l"))
+hl.bind(mainMod .. " + SHIFT + L",   hl.dsp.layout("swapcol r"))
 hl.bind(mainMod .. " + SHIFT + J",   hl.dsp.window.swap({ direction = "down" }))
 hl.bind(mainMod .. " + SHIFT + K",   hl.dsp.window.swap({ direction = "up" }))
-hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout("swapcol l"))
-hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout("swapcol r"))
+-- Ctrl+H/L: pan the scrolling viewport left/right (without rearranging)
+hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout("move -col"))
+hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout("move +col"))
 hl.bind(mainMod .. " + R",           hl.dsp.layout("colresize +conf"))  -- cycle width fwd
 hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout("colresize -conf"))  -- cycle width back
 -- Stack windows vertically (Niri-style consume/expel)
