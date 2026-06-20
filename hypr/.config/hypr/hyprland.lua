@@ -289,20 +289,24 @@ hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 
 -- ── Scrolling layout — column manipulation ────────────────────────────────────
-hl.bind(mainMod .. " + SHIFT + H",   hl.dsp.layout "move -col")        -- move column left
-hl.bind(mainMod .. " + SHIFT + L",   hl.dsp.layout "move +col")        -- move column right
-hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout "swapcol l")        -- swap with left neighbor
-hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout "swapcol r")        -- swap with right neighbor
-hl.bind(mainMod .. " + R",           hl.dsp.layout "colresize +conf")  -- cycle width fwd
-hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout "colresize -conf")  -- cycle width back
+-- H/L: move the focused column left/right
+-- J/K: swap the focused window down/up within its column
+hl.bind(mainMod .. " + SHIFT + H",   hl.dsp.layout("move -col"))
+hl.bind(mainMod .. " + SHIFT + L",   hl.dsp.layout("move +col"))
+hl.bind(mainMod .. " + SHIFT + J",   hl.dsp.window.swap({ direction = "down" }))
+hl.bind(mainMod .. " + SHIFT + K",   hl.dsp.window.swap({ direction = "up" }))
+hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout("swapcol l"))
+hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout("swapcol r"))
+hl.bind(mainMod .. " + R",           hl.dsp.layout("colresize +conf"))  -- cycle width fwd
+hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout("colresize -conf"))  -- cycle width back
 -- Stack windows vertically (Niri-style consume/expel)
 -- Super+G: pull the window to the right into the current column (stack below)
 -- Super+Shift+G: eject the focused window into its own column
-hl.bind(mainMod .. " + G",           hl.dsp.layout "consume")
-hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.layout "expel")
-hl.bind(mainMod .. " + bracketright",hl.dsp.layout "consume_or_expel next")
-hl.bind(mainMod .. " + bracketleft", hl.dsp.layout "consume_or_expel prev")
-hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout "promote")       -- promote to own column
+hl.bind(mainMod .. " + G",           hl.dsp.layout("consume"))
+hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.layout("expel"))
+hl.bind(mainMod .. " + bracketright",hl.dsp.layout("consume_or_expel next"))
+hl.bind(mainMod .. " + bracketleft", hl.dsp.layout("consume_or_expel prev"))
+hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout("promote"))       -- promote to own column
 hl.bind(mainMod .. " + BackSpace",         hl.dsp.layout "fit active")  -- fit focused column into view
 hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout "fit all")    -- fit all columns
 
