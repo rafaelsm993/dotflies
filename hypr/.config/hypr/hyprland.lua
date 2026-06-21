@@ -266,9 +266,9 @@ do
     hl.bind(mainMod .. " + F", function()
         _fFull = not _fFull
         if _fFull then
-            hl.dsp.layout("colresize 1.0")()
+            hl.dispatch(hl.dsp.layout("colresize 1.0"))
         else
-            hl.dsp.layout("colresize 0.5")()
+            hl.dispatch(hl.dsp.layout("colresize 0.5"))
         end
     end)
 end
