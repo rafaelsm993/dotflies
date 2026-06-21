@@ -315,18 +315,18 @@ hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout("fit all"))    -- fit a
 -- ── Resize mode (Super+R → H/J/K/L to resize → Escape to exit) ───────────────
 local resizeStep = 40
 hl.define_submap("resize", function()
-    hl.bind("H",      hl.dsp.window.resize({ x = -resizeStep, y = 0,           relative = true }))
-    hl.bind("L",      hl.dsp.window.resize({ x = resizeStep,  y = 0,           relative = true }))
-    hl.bind("K",      hl.dsp.window.resize({ x = 0,           y = -resizeStep, relative = true }))
-    hl.bind("J",      hl.dsp.window.resize({ x = 0,           y = resizeStep,  relative = true }))
-    hl.bind("left",   hl.dsp.window.resize({ x = -resizeStep, y = 0,           relative = true }))
-    hl.bind("right",  hl.dsp.window.resize({ x = resizeStep,  y = 0,           relative = true }))
-    hl.bind("up",     hl.dsp.window.resize({ x = 0,           y = -resizeStep, relative = true }))
-    hl.bind("down",   hl.dsp.window.resize({ x = 0,           y = resizeStep,  relative = true }))
+    hl.bind("H",      hl.dsp.window.resize({ x = -resizeStep, y = 0,           relative = true }), { repeating = true })
+    hl.bind("L",      hl.dsp.window.resize({ x = resizeStep,  y = 0,           relative = true }), { repeating = true })
+    hl.bind("K",      hl.dsp.window.resize({ x = 0,           y = -resizeStep, relative = true }), { repeating = true })
+    hl.bind("J",      hl.dsp.window.resize({ x = 0,           y = resizeStep,  relative = true }), { repeating = true })
+    hl.bind("left",   hl.dsp.window.resize({ x = -resizeStep, y = 0,           relative = true }), { repeating = true })
+    hl.bind("right",  hl.dsp.window.resize({ x = resizeStep,  y = 0,           relative = true }), { repeating = true })
+    hl.bind("up",     hl.dsp.window.resize({ x = 0,           y = -resizeStep, relative = true }), { repeating = true })
+    hl.bind("down",   hl.dsp.window.resize({ x = 0,           y = resizeStep,  relative = true }), { repeating = true })
     hl.bind("Escape", hl.dsp.submap("reset"), { transparent = true })
     hl.bind("Return", hl.dsp.submap("reset"), { transparent = true })
 end)
-hl.bind(mainMod .. " + R", hl.dsp.submap("resize"))
+hl.bind(mainMod .. " + R", hl.dsp.submap("resize"), { locked = true })
 
 -- ── Workspaces ────────────────────────────────────────────────────────────────
 for i = 1, 10 do
