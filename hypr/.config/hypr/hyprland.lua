@@ -193,7 +193,7 @@ hl.config({
         column_width             = 0.5,               -- default: half of 3440px
         focus_fit_method         = 1,                 -- 1 = fit column fully into view
         follow_focus             = true,
-        explicit_column_widths   = "0.333, 0.5, 0.667, 1.0",
+        explicit_column_widths   = "0.25, 0.5, 1.0",
         wrap_focus               = true,
         wrap_swapcol             = true,
         direction                = "right",
@@ -260,8 +260,19 @@ hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + W",          hl.dsp.window.close())
 hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + F",          hl.dsp.layout "colresize 1.0")    -- maximize column width
-hl.bind(mainMod .. " + SHIFT + F",  hl.dsp.window.fullscreen())        -- actual fullscreen
+-- Super+F: toggle column between full width (1.0) and half width (0.5)
+do
+    local _fFull = false
+    hl.bind(mainMod .. " + F", function()
+        _fFull = not _fFull
+        if _fFull then
+            hl.dsp.layout("colresize 1.0")()
+        else
+            hl.dsp.layout("colresize 0.5")()
+        end
+    end)
+end
+hl.bind(mainMod .. " + SHIFT + F",  hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + P",          hl.dsp.window.pseudo())
 
 -- ── Noctalia Shell ───────────────────────────────────────────────────────────
@@ -289,27 +300,19 @@ hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 
 -- ── Scrolling layout — column manipulation ────────────────────────────────────
--- Shift+H/L: swap the focused column with its left/right neighbor
--- Shift+J/K: swap the focused window up/down within its column
-hl.bind(mainMod .. " + SHIFT + H",   hl.dsp.layout("swapcol l"))
-hl.bind(mainMod .. " + SHIFT + L",   hl.dsp.layout("swapcol r"))
-hl.bind(mainMod .. " + SHIFT + J",   hl.dsp.window.swap({ direction = "down" }))
-hl.bind(mainMod .. " + SHIFT + K",   hl.dsp.window.swap({ direction = "up" }))
+-- Shift+H/K: consume_or_expel toward prev; Shift+L/J: toward next
+-- (if alone in column → consumes from neighbor; if stacked → expels to neighbor)
+hl.bind(mainMod .. " + SHIFT + H",   hl.dsp.layout("consume_or_expel prev"))
+hl.bind(mainMod .. " + SHIFT + K",   hl.dsp.layout("consume_or_expel prev"))
+hl.bind(mainMod .. " + SHIFT + L",   hl.dsp.layout("consume_or_expel next"))
+hl.bind(mainMod .. " + SHIFT + J",   hl.dsp.layout("consume_or_expel next"))
 -- Ctrl+H/L: pan the scrolling viewport left/right (without rearranging)
 hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout("move -col"))
 hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout("move +col"))
-hl.bind(mainMod .. " + R",           hl.dsp.layout("colresize +conf"))  -- cycle width fwd
-hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout("colresize -conf"))  -- cycle width back
--- Stack windows vertically (Niri-style consume/expel)
--- Super+G: pull the window to the right into the current column (stack below)
--- Super+Shift+G: eject the focused window into its own column
-hl.bind(mainMod .. " + G",           hl.dsp.layout("consume"))
-hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.layout("expel"))
-hl.bind(mainMod .. " + bracketright",hl.dsp.layout("consume_or_expel next"))
-hl.bind(mainMod .. " + bracketleft", hl.dsp.layout("consume_or_expel prev"))
+hl.bind(mainMod .. " + R",           hl.dsp.layout("colresize +conf"))  -- cycle width 25→50→100
+hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout("colresize -conf"))  -- cycle width reverse
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout("promote"))       -- promote to own column
-hl.bind(mainMod .. " + BackSpace",         hl.dsp.layout "fit active")  -- fit focused column into view
-hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout "fit all")    -- fit all columns
+hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout("fit all"))    -- fit all columns into view
 
 -- ── Workspaces ────────────────────────────────────────────────────────────────
 for i = 1, 10 do
