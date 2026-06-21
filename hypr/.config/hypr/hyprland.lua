@@ -260,18 +260,7 @@ hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + W",          hl.dsp.window.close())
 hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
--- Super+F: toggle column between full width (1.0) and half width (0.5)
-do
-    local _fFull = false
-    hl.bind(mainMod .. " + F", function()
-        _fFull = not _fFull
-        if _fFull then
-            hl.dispatch(hl.dsp.layout("colresize 1.0"))
-        else
-            hl.dispatch(hl.dsp.layout("colresize 0.5"))
-        end
-    end)
-end
+hl.bind(mainMod .. " + F",          hl.dsp.layout("colresize 1.0"))
 hl.bind(mainMod .. " + SHIFT + F",  hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + P",          hl.dsp.window.pseudo())
 
