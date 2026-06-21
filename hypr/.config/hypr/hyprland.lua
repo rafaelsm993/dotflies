@@ -312,6 +312,22 @@ hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout("colresize -conf"))  -- cycle
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout("promote"))       -- promote to own column
 hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout("fit all"))    -- fit all columns into view
 
+-- ── Resize mode (Super+R → H/J/K/L to resize → Escape to exit) ───────────────
+local resizeStep = 40
+hl.define_submap("resize", function()
+    hl.bind("H",      hl.dsp.window.resize({ x = -resizeStep, y = 0 }))
+    hl.bind("L",      hl.dsp.window.resize({ x = resizeStep,  y = 0 }))
+    hl.bind("K",      hl.dsp.window.resize({ x = 0, y = -resizeStep }))
+    hl.bind("J",      hl.dsp.window.resize({ x = 0, y = resizeStep  }))
+    hl.bind("left",   hl.dsp.window.resize({ x = -resizeStep, y = 0 }))
+    hl.bind("right",  hl.dsp.window.resize({ x = resizeStep,  y = 0 }))
+    hl.bind("up",     hl.dsp.window.resize({ x = 0, y = -resizeStep }))
+    hl.bind("down",   hl.dsp.window.resize({ x = 0, y = resizeStep  }))
+    hl.bind("Escape", hl.dsp.submap("reset"), { transparent = true })
+    hl.bind("Return", hl.dsp.submap("reset"), { transparent = true })
+end)
+hl.bind(mainMod .. " + R", hl.dsp.submap("resize"))
+
 -- ── Workspaces ────────────────────────────────────────────────────────────────
 for i = 1, 10 do
     local key = i % 10 -- 10 maps to key 0
