@@ -193,7 +193,7 @@ hl.config({
         column_width             = 0.5,               -- default: half of 3440px
         focus_fit_method         = 1,                 -- 1 = fit column fully into view
         follow_focus             = true,
-        explicit_column_widths   = "0.25, 0.5, 1.0",
+        explicit_column_widths   = "0.25, 0.5, 0.75, 1.0",
         wrap_focus               = true,
         wrap_swapcol             = true,
         direction                = "right",
@@ -261,17 +261,17 @@ hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + W",          hl.dsp.window.close())
 hl.bind(mainMod .. " + V",          hl.dsp.window.float({ action = "toggle" }))
 -- Super+F: toggle column between full width (1.0) and half width (0.5)
-do
-    local _fFull = false
-    hl.bind(mainMod .. " + F", function()
-        _fFull = not _fFull
-        if _fFull then
-            hl.dispatch(hl.dsp.layout("colresize 1.0"))
-        else
-            hl.dispatch(hl.dsp.layout("colresize 0.5"))
-        end
-    end)
+-- Extracted so the same function can be referenced inside the resize submap
+local _fFull = false
+local function toggleColWidth()
+    _fFull = not _fFull
+    if _fFull then
+        hl.dispatch(hl.dsp.layout("colresize 1.0"))
+    else
+        hl.dispatch(hl.dsp.layout("colresize 0.5"))
+    end
 end
+hl.bind(mainMod .. " + F", toggleColWidth)
 hl.bind(mainMod .. " + SHIFT + F",  hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + P",          hl.dsp.window.pseudo())
 
@@ -288,14 +288,14 @@ hl.bind(mainMod .. " + Escape",      noc "session lock")
 
 -- ── Scrolling layout — focus ──────────────────────────────────────────────────
 -- Horizontal: move between columns; Vertical: move between stacked windows in a column
-hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L",     hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + K",     hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + J",     hl.dsp.focus({ direction = "down" }))
-hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left" }),  { repeating = true })
+hl.bind(mainMod .. " + L",     hl.dsp.focus({ direction = "right" }), { repeating = true })
+hl.bind(mainMod .. " + K",     hl.dsp.focus({ direction = "up" }),    { repeating = true })
+hl.bind(mainMod .. " + J",     hl.dsp.focus({ direction = "down" }),  { repeating = true })
+hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }),  { repeating = true })
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }), { repeating = true })
+hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }),    { repeating = true })
+hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }),  { repeating = true })
 
 -- ── Scrolling layout — column manipulation ────────────────────────────────────
 -- Shift+H/K: consume_or_expel toward prev; Shift+L/J: toward next
@@ -307,7 +307,6 @@ hl.bind(mainMod .. " + SHIFT + J",   hl.dsp.layout("consume_or_expel next"))
 -- Ctrl+H/L: pan the scrolling viewport left/right (without rearranging)
 hl.bind(mainMod .. " + CTRL + H",    hl.dsp.layout("move -col"))
 hl.bind(mainMod .. " + CTRL + L",    hl.dsp.layout("move +col"))
-hl.bind(mainMod .. " + R",           hl.dsp.layout("colresize +conf"))  -- cycle width 25→50→100
 hl.bind(mainMod .. " + SHIFT + R",   hl.dsp.layout("colresize -conf"))  -- cycle width reverse
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout("promote"))       -- promote to own column
 hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout("fit all"))    -- fit all columns into view
@@ -323,6 +322,53 @@ hl.define_submap("resize", function()
     hl.bind("right",  hl.dsp.window.resize({ x = resizeStep,  y = 0,           relative = true }), { repeating = true })
     hl.bind("up",     hl.dsp.window.resize({ x = 0,           y = -resizeStep, relative = true }), { repeating = true })
     hl.bind("down",   hl.dsp.window.resize({ x = 0,           y = resizeStep,  relative = true }), { repeating = true })
+    hl.bind(mainMod .. " + R",         hl.dsp.layout("colresize +conf"))  -- cycle width forward inside submap
+    hl.bind(mainMod .. " + SHIFT + R", hl.dsp.layout("colresize -conf"))  -- cycle width reverse inside submap
+    -- Focus movement
+    hl.bind(mainMod .. " + H",         hl.dsp.focus({ direction = "left" }),  { repeating = true })
+    hl.bind(mainMod .. " + L",         hl.dsp.focus({ direction = "right" }), { repeating = true })
+    hl.bind(mainMod .. " + K",         hl.dsp.focus({ direction = "up" }),    { repeating = true })
+    hl.bind(mainMod .. " + J",         hl.dsp.focus({ direction = "down" }),  { repeating = true })
+    hl.bind(mainMod .. " + left",      hl.dsp.focus({ direction = "left" }),  { repeating = true })
+    hl.bind(mainMod .. " + right",     hl.dsp.focus({ direction = "right" }), { repeating = true })
+    hl.bind(mainMod .. " + up",        hl.dsp.focus({ direction = "up" }),    { repeating = true })
+    hl.bind(mainMod .. " + down",      hl.dsp.focus({ direction = "down" }),  { repeating = true })
+    -- Column manipulation
+    hl.bind(mainMod .. " + SHIFT + H",         hl.dsp.layout("consume_or_expel prev"))
+    hl.bind(mainMod .. " + SHIFT + K",         hl.dsp.layout("consume_or_expel prev"))
+    hl.bind(mainMod .. " + SHIFT + L",         hl.dsp.layout("consume_or_expel next"))
+    hl.bind(mainMod .. " + SHIFT + J",         hl.dsp.layout("consume_or_expel next"))
+    hl.bind(mainMod .. " + CTRL + H",          hl.dsp.layout("move -col"))
+    hl.bind(mainMod .. " + CTRL + L",          hl.dsp.layout("move +col"))
+    hl.bind(mainMod .. " + SHIFT + Return",    hl.dsp.layout("promote"))
+    hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.layout("fit all"))
+    -- Window state
+    hl.bind(mainMod .. " + W",         hl.dsp.window.close())
+    hl.bind(mainMod .. " + V",         hl.dsp.window.float({ action = "toggle" }))
+    hl.bind(mainMod .. " + F",         toggleColWidth)
+    hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
+    hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo())
+    -- Apps
+    hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(terminal))
+    hl.bind(mainMod .. " + B",         hl.dsp.exec_cmd(browser))
+    hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager))
+    -- Noctalia shell
+    hl.bind(mainMod .. " + space",       noc "panel-toggle launcher")
+    hl.bind(mainMod .. " + Tab",         noc "window-switcher")
+    hl.bind(mainMod .. " + SHIFT + V",   noc "panel-open launcher /clip")
+    hl.bind(mainMod .. " + period",      noc "panel-open launcher /emo")
+    hl.bind(mainMod .. " + Home",        noc "panel-toggle control-center")
+    hl.bind(mainMod .. " + O",           noc "settings-toggle")
+    hl.bind(mainMod .. " + M",           noc "panel-toggle system-monitor")
+    hl.bind(mainMod .. " + X",           noc "panel-toggle session")
+    -- Workspaces
+    for i = 1, 10 do
+        local key = i % 10
+        hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }))
+        hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+    end
+    hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special "magic")
+    hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
     hl.bind("Escape", hl.dsp.submap("reset"), { transparent = true })
     hl.bind("Return", hl.dsp.submap("reset"), { transparent = true })
 end)

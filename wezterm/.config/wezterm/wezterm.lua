@@ -48,9 +48,11 @@ config.cursor_blink_rate = 0
 config.hide_tab_bar_if_only_one_tab = true
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 config.window_background_opacity = OPACITY_ON
-config.color_scheme = 'Tokyo Night'
-config.max_fps = 120
+config.color_scheme = "Tokyo Night"
+-- config.color_scheme = 'Tokyo Night Light (Gogh)'
+config.max_fps = 180
 config.prefer_egl = true
+config.enable_wayland = false;
 
 -- DEBUG: press CTRL+SHIFT+L in wezterm to open the overlay
 -- config.debug_key_events = true
