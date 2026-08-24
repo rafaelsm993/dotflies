@@ -13,4 +13,4 @@ end
 
 mise activate fish | source
 # oh-my-posh init fish --config 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/refs/heads/main/themes/easy-term.omp.json' | source
-oh-my-posh init fish --config 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/refs/heads/main/themes/tokyo.omp.json' | source
+oh-my-posh init fish --config "$__fish_config_dir/tokyo.omp.json" | source
