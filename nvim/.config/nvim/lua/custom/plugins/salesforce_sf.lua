@@ -200,13 +200,32 @@ return {
               end
             end
 
+            --- True only for real auth files. Guards against non-auth JSON that happens to
+            --- carry a `username` key — notably `<orgId>.sandbox.json` files written by a
+            --- sandbox refresh, whose `username` is a bare 15/18-char org ID. Selecting one
+            --- produced `sf config set target-org <orgId>` → "is not authenticated".
+            local function is_auth_file(f, data)
+              if type(data) ~= 'table' then return false end
+              if type(data.username) ~= 'string' or data.username == '' then return false end
+              -- Sidecar/bookkeeping files that are not credentials
+              if f:match '%.sandbox%.json$' then return false end
+              if f:match 'key%.json$' then return false end
+              if f:match 'alias%.json$' then return false end
+              -- A real auth file always carries the org endpoint plus a usable credential
+              if type(data.instanceUrl) ~= 'string' or data.instanceUrl == '' then return false end
+              if not (data.accessToken or data.refreshToken) then return false end
+              -- A username is an email-like login, never a bare org ID
+              if data.username:match '^00%w+$' then return false end
+              return true
+            end
+
             local default_org = get_default_org()
             local files = vim.fn.glob(sfdx_dir .. '/*.json', false, true)
             local orgs = {}
             for _, f in ipairs(files) do
               if not f:match 'alias%.json$' then
                 local ok, data = pcall(vim.json.decode, table.concat(vim.fn.readfile(f), ''))
-                if ok and data and data.username then
+                if ok and is_auth_file(f, data) then
                   local alias = aliases[data.username]
                   local is_default = default_org == alias or default_org == data.username
                   table.insert(orgs, {
